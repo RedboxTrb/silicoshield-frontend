@@ -1,5 +1,6 @@
-import { FileText, Home, Sun, Moon, Scan } from 'lucide-react';
+import { FileText, Home, Sun, Moon, LogOut, User } from 'lucide-react';
 import type { Theme } from '../hooks/useTheme';
+import { useAuth } from '../context/AuthContext';
 
 interface HeaderProps {
   currentView: 'home' | 'results';
@@ -10,6 +11,8 @@ interface HeaderProps {
 }
 
 export function Header({ currentView, onNavigate, hasImages, theme, onToggleTheme }: HeaderProps) {
+  const { user, logout } = useAuth();
+
   return (
     <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -63,18 +66,41 @@ export function Header({ currentView, onNavigate, hasImages, theme, onToggleThem
               )}
             </nav>
             
-            {/* Theme Toggle */}
-            <button
-              onClick={onToggleTheme}
-              className="ml-2 w-10 h-10 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-              aria-label="Toggle theme"
-            >
-              {theme === 'light' ? (
-                <Moon className="w-5 h-5" />
-              ) : (
-                <Sun className="w-5 h-5" />
+            {/* User Info & Actions */}
+            <div className="ml-4 flex items-center gap-2 pl-4 border-l border-slate-200 dark:border-slate-700">
+              {/* User Email */}
+              {user && (
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                  <User className="w-4 h-4 text-slate-600 dark:text-slate-400" />
+                  <span className="text-sm text-slate-700 dark:text-slate-300">
+                    {user.email}
+                  </span>
+                </div>
               )}
-            </button>
+
+              {/* Theme Toggle */}
+              <button
+                onClick={onToggleTheme}
+                className="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                aria-label="Toggle theme"
+              >
+                {theme === 'light' ? (
+                  <Moon className="w-5 h-5" />
+                ) : (
+                  <Sun className="w-5 h-5" />
+                )}
+              </button>
+
+              {/* Logout Button */}
+              <button
+                onClick={logout}
+                className="w-10 h-10 flex items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
+                aria-label="Logout"
+                title="Logout"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -85,7 +85,7 @@ export function ResultsSection({
 
         const response = await fetch(API_ENDPOINTS.predict, {
           method: 'POST',
-          headers: getAPIHeaders(),
+          headers: getAPIHeaders(false), // Don't include Content-Type for FormData
           body: formData,
         });
 

@@ -3,7 +3,8 @@ import { UploadSection } from './components/UploadSection';
 import { ResultsSection } from './components/ResultsSection';
 import { HeroSection } from './components/HeroSection';
 import { Header } from './components/Header';
-import { PasswordGate } from './components/PasswordGate';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { AuthProvider } from './context/AuthContext';
 import { useTheme } from './hooks/useTheme';
 import { requestUserLocation, type LocationData } from './services/locationService';
 
@@ -22,30 +23,21 @@ export interface UploadedImage {
   };
 }
 
-export default function App() {
+function AppContent() {
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [currentView, setCurrentView] = useState<'home' | 'results'>('home');
   const [userLocation, setUserLocation] = useState<LocationData | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
-  // Check if already authenticated on mount
+  // Request user location on mount
   useEffect(() => {
-    const authenticated = sessionStorage.getItem('authenticated') === 'true';
-    setIsAuthenticated(authenticated);
+    requestUserLocation().then((location) => {
+      if (location) {
+        setUserLocation(location);
+        console.log('Location detected:', location);
+      }
+    });
   }, []);
-
-  // Request user location on mount (only after authentication)
-  useEffect(() => {
-    if (isAuthenticated) {
-      requestUserLocation().then((location) => {
-        if (location) {
-          setUserLocation(location);
-          console.log('Location detected:', location);
-        }
-      });
-    }
-  }, [isAuthenticated]);
 
   const handleImagesAdded = (newImages: UploadedImage[]) => {
     setImages((prev) => [...prev, ...newImages]);
@@ -69,11 +61,6 @@ export default function App() {
       prev.map((img) => (img.id === updatedImage.id ? updatedImage : img))
     );
   };
-
-  // Show password gate if not authenticated
-  if (!isAuthenticated) {
-    return <PasswordGate onAuthenticated={() => setIsAuthenticated(true)} />;
-  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors">
@@ -100,5 +87,15 @@ export default function App() {
         />
       )}
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <ProtectedRoute>
+        <AppContent />
+      </ProtectedRoute>
+    </AuthProvider>
   );
 }
