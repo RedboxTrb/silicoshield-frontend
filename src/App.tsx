@@ -3,7 +3,6 @@ import { UploadSection } from './components/UploadSection';
 import { ResultsSection } from './components/ResultsSection';
 import { HeroSection } from './components/HeroSection';
 import { Header } from './components/Header';
-import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import { useTheme } from './hooks/useTheme';
 import { requestUserLocation, type LocationData } from './services/locationService';
@@ -93,9 +92,7 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider>
-      <ProtectedRoute>
-        <AppContent />
-      </ProtectedRoute>
+      <AppContent />
     </AuthProvider>
   );
 }

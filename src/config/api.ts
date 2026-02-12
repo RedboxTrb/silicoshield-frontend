@@ -10,18 +10,13 @@ export const API_ENDPOINTS = {
   },
 };
 
-// Helper to get headers with JWT token
+// Helper to get headers
 // Set includeContentType to false when uploading files/FormData
 export const getAPIHeaders = (includeContentType = true) => {
-  const token = sessionStorage.getItem('authToken');
   const headers: Record<string, string> = {};
 
   if (includeContentType) {
     headers['Content-Type'] = 'application/json';
-  }
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
   }
 
   return headers;
