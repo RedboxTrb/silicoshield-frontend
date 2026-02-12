@@ -2610,3 +2610,79 @@
     background-color: var(--color-slate-400) !important;
   }
 }
+
+/* Print Styles */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  /* Hide interactive elements, header, and upload section */
+  header,
+  button,
+  .no-print,
+  input[type="file"],
+  label[for="file-upload-results"] {
+    display: none !important;
+  }
+
+  /* Force white background */
+  body, div, section, .min-h-screen, .bg-slate-50, .dark\:bg-slate-950 {
+    background-color: white !important;
+    color: black !important;
+    min-height: auto !important;
+  }
+
+  /* Remove shadows and transitions */
+  * {
+    box-shadow: none !important;
+    transition: none !important;
+  }
+
+  /* Container - full width */
+  .max-w-7xl {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* PDF header */
+  .pdf-header {
+    display: block !important;
+    text-align: center;
+    padding: 4mm !important;
+    margin-bottom: 4mm !important;
+    border-bottom: 1px solid #333;
+  }
+
+  .pdf-header h1 {
+    font-size: 18px !important;
+    margin: 0 !important;
+    color: black !important;
+  }
+
+  .pdf-header p {
+    font-size: 10px !important;
+    margin: 0 !important;
+    color: #555 !important;
+  }
+
+  /* Cards */
+  .rounded-xl, .rounded-2xl {
+    border-radius: 4px !important;
+    border: 1px solid #ccc !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Dark mode overrides for print */
+  .dark\:bg-slate-900, .dark\:bg-slate-800, .dark\:text-white, .dark\:text-slate-300, .dark\:text-slate-400 {
+    background-color: white !important;
+    color: black !important;
+  }
+
+  /* Hide drag-drop upload area */
+  .border-dashed {
+    display: none !important;
+  }
+}

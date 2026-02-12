@@ -24,6 +24,15 @@ export function ResultsSection({
 }: ResultsSectionProps) {
   const [dragActive, setDragActive] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [showPdfHeader, setShowPdfHeader] = useState(false);
+
+  const handleExport = () => {
+    setShowPdfHeader(true);
+    setTimeout(() => {
+      window.print();
+      setShowPdfHeader(false);
+    }, 100);
+  };
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -143,11 +152,17 @@ export function ResultsSection({
         <div className="flex items-center gap-3">
           {completedCount > 0 && (
             <>
-              <button className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-300">
+              <button
+                onClick={handleExport}
+                className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-300"
+              >
                 <Download className="w-4 h-4" />
                 <span className="text-sm font-medium">Export Report</span>
               </button>
-              <button className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-300">
+              <button
+                onClick={() => window.print()}
+                className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-300"
+              >
                 <Printer className="w-4 h-4" />
                 <span className="text-sm font-medium">Print</span>
               </button>
@@ -166,6 +181,19 @@ export function ResultsSection({
           )}
         </div>
       </div>
+
+      {/* PDF Header (only visible during print) */}
+      {showPdfHeader && (
+        <div className="pdf-header bg-white p-6 mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <h1 className="text-3xl font-semibold text-gray-900">Silicosis Detection Analysis Report</h1>
+            <p className="text-sm text-gray-500">Generated: {new Date().toLocaleDateString()}</p>
+          </div>
+          <p className="text-sm text-gray-600">
+            {completedCount} image{completedCount !== 1 ? 's' : ''} analyzed
+          </p>
+        </div>
+      )}
 
       {/* Analysis Overview */}
       {completedCount > 0 && <AnalysisOverview images={images} />}
